@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>B站 IP 属地</title>
+    <link rel="stylesheet" href="popup.css">
+  </head>
+  <body>
+    <main class="panel">
+      <header class="header">
+        <span class="logo-shell"><img class="logo" src="icons/icon48.png" alt=""></span>
+        <div class="header-copy">
+          <span class="eyebrow">BILIBILI WEB EXTENSION</span>
+          <h1>B站 IP 属地</h1>
+          <p>轻量常驻 · 简洁显示 · 本机存储</p>
+        </div>
+      </header>
+
+      <section class="status-card" aria-label="功能状态">
+        <div class="card-heading">
+          <span>运行状态</span>
+          <span class="lightweight-badge">轻量模式</span>
+        </div>
+        <div class="status-row">
+          <span class="feature-mark comment-mark" aria-hidden="true"></span>
+          <span class="feature-copy">
+            <strong>评论区</strong>
+            <small>读取页面已有属地字段</small>
+          </span>
+          <span class="status-pill ready">自动启用</span>
+        </div>
+        <div class="status-row">
+          <span class="feature-mark profile-mark" aria-hidden="true"></span>
+          <span class="feature-copy">
+            <strong>个人主页</strong>
+            <small>显示移动端主页属地</small>
+          </span>
+          <span id="profile-status" class="status-pill" data-state="loading">检查中…</span>
+        </div>
+      </section>
+
+      <section class="privacy-note" aria-label="隐私说明">
+        <span class="shield" aria-hidden="true">✓</span>
+        <p><strong>隐私优先</strong><br>不读取网页 Cookie；授权令牌只保存在当前浏览器。</p>
+      </section>
+
+      <section id="authorize-view" class="action-view" hidden>
+        <p class="explain">个人主页功能需要用手机哔哩哔哩扫码授权一次。</p>
+        <button id="authorize-button" class="primary" type="button">
+          <span>扫码启用个人主页</span><span aria-hidden="true">→</span>
+        </button>
+      </section>
+
+      <section id="qr-view" class="qr-view" hidden>
+        <div class="section-title">手机扫码授权</div>
+        <p id="qr-message">请用手机哔哩哔哩“扫一扫”</p>
+        <div class="qr-code-shell">
+          <div id="qr-code" class="qr-code" aria-label="哔哩哔哩授权二维码"></div>
+        </div>
+        <button id="refresh-button" class="secondary" type="button">刷新二维码</button>
+      </section>
+
+      <section id="authorized-view" class="authorized-view" hidden>
+        <div class="success-note"><span aria-hidden="true">✓</span><p><strong>个人主页已启用</strong><br>刷新打开的个人主页即可看到属地。</p></div>
+        <button id="clear-button" class="text-button" type="button">清除本机授权</button>
+      </section>
+
+      <p id="error-message" class="error" role="alert" hidden></p>
+      <footer><span class="footer-dot" aria-hidden="true"></span>仅连接哔哩哔哩官方域名</footer>
+    </main>
+
+    <script src="lib/qrcode.js"></script>
+    <script src="popup.js"></script>
+  </body>
+</html>

@@ -1,0 +1,47 @@
+[data-bili-ip-location="profile"] {
+  display: inline-flex;
+  align-items: center;
+  box-sizing: border-box;
+  min-height: 24px;
+  margin-left: 8px;
+  padding: 3px 9px;
+  border: 1px solid rgb(255 255 255 / 30%);
+  border-radius: 999px;
+  background: rgb(15 18 22 / 46%);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 12%);
+  backdrop-filter: blur(8px);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 16px;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+[data-bili-ip-location="profile"]::before {
+  width: 6px;
+  height: 6px;
+  margin-right: 5px;
+  border-radius: 50%;
+  background: #fb7299;
+  box-shadow: 0 0 0 2px rgb(251 114 153 / 20%);
+  content: "";
+}
+
+[data-bili-ip-location="profile"][data-state="authorization-required"] {
+  border-color: rgb(255 255 255 / 18%);
+  color: rgb(255 255 255 / 78%);
+}
+
+[data-bili-ip-location="profile"][data-state="authorization-required"]::before {
+  background: #9499a0;
+  box-shadow: none;
+}
+
+.h-basic [data-bili-ip-location="profile"] {
+  min-height: 20px;
+  margin-left: 6px;
+  padding: 2px 7px;
+  background: rgb(0 0 0 / 42%);
+  font-size: 11px;
+}
