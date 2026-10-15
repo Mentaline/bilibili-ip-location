@@ -1,5 +1,3 @@
-/* global qrcode */
-
 (() => {
   'use strict'
 

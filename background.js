@@ -1,5 +1,3 @@
-/* global md5 */
-
 importScripts('lib/md5.js')
 
 const STORAGE_KEY = 'biliIpAuth'

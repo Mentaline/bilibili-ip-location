@@ -1,10 +1,25 @@
-# No-comments audit (phase 1)
+# No-comments audit
 
-Report only. No application code was changed.
+Phase 1 classified every comment. Phase 2 applied to own code only.
 
-Scope: whole tree on `main` at `7af1feb` (Release v0.4.1). A contiguous `//` block or one `/* */` block is a single comment, cited at its first line.
+Scope: whole tree on `main` at `7af1feb` (Release v0.4.1). A contiguous `//` block or one `/* */` block is a single comment, cited at its first line. The table is the phase 1 inventory.
 
-Suppressions searched and not found: `eslint-disable`, `@ts-ignore`, `@ts-expect-error`, `@ts-nocheck`, `biome-ignore`, `istanbul ignore`, `# noqa`, `# type: ignore`. The only lint directives are the two `/* global */` lines below.
+## Phase 2 (own code only)
+
+Applied:
+
+- `background.js:1` MUST KILL: deleted `/* global md5 */`.
+- `popup.js:1` MUST KILL: deleted `/* global qrcode */`.
+- `comment-main.js` ENCODE (the empty catches that were at lines 93 and 307): comments deleted. The empty catches stay. `node --test test/comment-main.test.js` proves a missing host API does not escape the installer, and a throw from rendering does not escape the patched `update` (the host return value is kept; a throw from the host `update` still propagates).
+
+Not applied:
+
+- `lib/qrcode.js` was not edited. Every KEEP stays. Vendored MUST KILL rows stay too, because the file is the pinned upstream snapshot.
+- `LICENSE`, `lib/md5.js`, and other third-party files were not edited.
+
+Unenforced rules: none for own code. The two catch rules are enforced by `test/comment-main.test.js`.
+
+Suppressions searched and not found: `eslint-disable`, `@ts-ignore`, `@ts-expect-error`, `@ts-nocheck`, `biome-ignore`, `istanbul ignore`, `# noqa`, `# type: ignore`. The only lint directives were the two `/* global */` lines in the table; phase 2 deleted both.
 
 Files scanned with no code comments: `profile.js`, `popup.css`, `profile.css`, `popup.html`, `manifest.json`, `icon.svg`, `lib/md5.js`, `README.md`, `THIRD_PARTY_NOTICES.md`, `.gitignore`. `lib/md5.js` is minified blueimp JavaScript-MD5 with no header; attribution is in `THIRD_PARTY_NOTICES.md`. `LICENSE` is the project MIT text (Copyright (c) 2026 Mentaline), not a code comment; leave it untouched.
 
@@ -23,10 +38,10 @@ Files scanned with no code comments: `profile.js`, `popup.css`, `profile.css`, `
 
 | file:line | bucket | one-line reason | proposed fix |
 | --- | --- | --- | --- |
-| background.js:1 | MUST KILL | Dangling `/* global md5 */` lint directive. This repo has no ESLint/JSHint config, so it enforces nothing, and it restates `importScripts('lib/md5.js')`. | Delete the directive. `signParams` already calls `md5`. If a linter is added later, declare `md5` in that config, not in the file. |
-| comment-main.js:93 | ENCODE | States a real rule: a throw inside our renderer must not escape into Bilibili's patched `update`. The empty catch is the behavior; the comment is the only statement of the rule. | Add a test that wrapped `update` still returns the host result and does not throw when rendering throws. Then delete the comment. Keep the catch. |
-| comment-main.js:307 | ENCODE | States a real rule: content-script install must not throw into the page when a host hook fails. Same rule as line 93, at the installer boundary. | Add a test that a throwing `customElements.define` or `attachShadow` does not propagate out of the IIFE. Then delete the comment. Keep the catch. |
-| popup.js:1 | MUST KILL | Dangling `/* global qrcode */` lint directive. Nothing in the repo reads it, and `popup.html` already loads `lib/qrcode.js` before `popup.js`. | Delete the directive. `renderQr` already calls `qrcode`. |
+| background.js:1 | MUST KILL | Dangling `/* global md5 */` lint directive. This repo has no ESLint/JSHint config, so it enforces nothing, and it restates `importScripts('lib/md5.js')`. | Applied in phase 2: directive deleted. |
+| comment-main.js:93 | ENCODE | States a real rule: a throw inside our renderer must not escape into Bilibili's patched `update`. The empty catch is the behavior; the comment is the only statement of the rule. | Applied in phase 2: comment deleted, catch kept, covered by `test/comment-main.test.js`. |
+| comment-main.js:307 | ENCODE | States a real rule: content-script install must not throw into the page when a host hook fails. Same rule as line 93, at the installer boundary. | Applied in phase 2: comment deleted, catch kept, covered by `test/comment-main.test.js`. |
+| popup.js:1 | MUST KILL | Dangling `/* global qrcode */` lint directive. Nothing in the repo reads it, and `popup.html` already loads `lib/qrcode.js` before `popup.js`. | Applied in phase 2: directive deleted. |
 | lib/qrcode.js:1 | KEEP | MIT copyright header plus the DENSO WAVE 'QR Code' trademark notice (lines 1-16). Proof: MIT requires the copyright notice to stay in copies (http://www.opensource.org/licenses/mit-license.php); trademark line cites http://www.denso-wave.com/qrcode/faqpatent-e.html. File matches upstream byte for byte. | Leave the comment. Same pinned snapshot; editing it forks upstream. |
 | lib/qrcode.js:20 | MUST KILL | Section banner only repeats the next declaration (`qrcode`). | Do not edit `lib/qrcode.js`. It is byte-identical to kazuhikoarase/qrcode-generator `js/dist/qrcode.js` @ `83b7e8fe3fddd3b0368dbafd6ce56995bd25e3c8` (cmp-verified; pinned in THIRD_PARTY_NOTICES.md). Leave the comment until the library is replaced. |
 | lib/qrcode.js:24 | KEEP | JSDoc states QR Code model limits: version 1-40 and error-correction levels L/M/Q/H. Proof: ISO/IEC 18004 defines those versions and levels; this is the upstream signature, not a local note. | Leave the comment. Same pinned snapshot; editing it forks upstream. |
@@ -139,4 +154,4 @@ Files scanned with no code comments: `profile.js`, `popup.css`, `profile.css`, `
 | lib/qrcode.js:2268 | KEEP | Names the UTF-16 surrogate-pair branch. Proof: ECMA-262 strings are UTF-16 code units; a pair encodes U+10000..U+10FFFF. | Leave the comment. Same pinned snapshot; editing it forks upstream. |
 | lib/qrcode.js:2271 | KEEP | States the surrogate math the next lines implement (subtract 0x10000, split 20 bits). Proof: Unicode scalar-value formula for a high/low surrogate pair. | Leave the comment. Same pinned snapshot; editing it forks upstream. |
 
-Phase 1 stops here. No comment was deleted and no rule was encoded.
+Phase 2 stopped after own code. `lib/qrcode.js` and `LICENSE` are unchanged.
