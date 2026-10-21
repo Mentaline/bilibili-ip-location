@@ -89,9 +89,7 @@
       const result = Reflect.apply(originalUpdate, this, args)
       try {
         renderActionButtons(this)
-      } catch {
-        // B站改版时静默降级，不影响原评论区。
-      }
+      } catch {}
       return result
     }
 
@@ -303,7 +301,5 @@
     hookShadowRoots()
     observeRoot(document)
     scheduleScan(document)
-  } catch {
-    // 扩展必须在 B 站结构变化时保持无害。
-  }
+  } catch {}
 })()
